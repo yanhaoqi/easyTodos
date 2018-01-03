@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin:20px;
+            padding:0;
+        }
+        .dragArea{
+            width: 200px;
+            height: 200px;
+            border: 2px solid black;
+            text-align: center;
+            line-height: 200px;
+        }
+        .dragAreaOn{
+            border: 4px solid #abf;
+        }
+        .imgs{
+            margin-top: 20px;
+            width: 300px;
+            height:300px;
+            border: #afb solid 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dragArea">
+        拖拽图片到这里
+    </div>
+    <div class="imgs">
+
+    </div>
+
+<script>
+    var dragArea = document.getElementsByClassName('dragArea')[0]
+    dragArea.ondragenter = function() {
+        dragArea.classList.add('dragAreaOn')
+        return false
+    }
+    dragArea.ondragover = function(e) {
+        e.preventDefault()
+        dragArea.classList.add('dragAreaOn')
+    }
+    dragArea.ondragleave = function() {
+        dragArea.classList.remove('dragAreaOn')
+    }
+    dragArea.ondrop = function(e) {
+        e.preventDefault()
+        var files = e.dataTransfer.files
+        for (var i = 0; i < files.length; i++) {
+            var img = document.createElement('img')
+            img.src = URL.createObjectURL(files[i])
+            img.onload = function() {
+                img.width = 200
+                document.querySelector('.imgs').appendChild(img)
+            }
+        }
+//        files.forEach((item) => {
+//            var img = document.createElement('img')
+//            img.src = createObjectURL(item)
+//            img.onload = function() {
+//                img.width = 100
+//                document.querySelector('imgs').appendChild(img)
+//            }
+//        })
+        dragArea.classList.remove('dragAreaOn')
+        return false
+    }
+</script>
+</body>
+</html>

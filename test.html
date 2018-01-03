@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin:0;
+            padding: 0;
+        }
+        .wrapper{
+            width: 1200px;
+            margin: 20px auto;
+            text-align: center;
+        }
+        .drop{
+            margin: 20px auto;
+            width:600px;
+            height: 450px;
+            border: 2px solid black;
+            text-align: center;
+            line-height: 450px;
+            box-sizing: border-box;
+        }
+        #uploadBtn{
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            filter: alpha(opacity=0);
+            position: absolute;
+            z-index: -1;
+        }
+        #uploadBtn + label{
+            display: inline-block;
+            padding: 8px;
+            background-color: #3fa3dc;
+            font: 16px '微软雅黑';
+            border-radius: 5px;
+        }
+        #uploadBtn + label:hover{
+            background-color: #f55;
+            color: white;
+            cursor: pointer;
+        }
+        .show{
+            width:1050px;
+            height: 420px;
+            margin: 0 auto;
+            border: 2px solid #3fa3dc;
+            text-align: center;
+            line-height: 400px;
+        }
+        .ondrag{
+           border: 4px solid #f55;
+        }
+        .img{
+            float: left;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+<!--预加载图片-->
+<div class="wrapper">
+    <div class="show">
+        <!--上传服务器之前的图片预览-->
+    </div>
+    <div class="drop" draggable="true">
+        <input type="file" multiple="multiple" accept="image/jpeg, image/png, image/jpg" id="uploadBtn">
+        <label for="uploadBtn">拖拽文件到方框 或者 点击按钮选择文件</label>
+    </div>
+</div>
+
+<script>
+    var dropElement = document.querySelector('.drop')
+    var inputUpload = document.querySelector('#uploadBtn')
+
+
+//    拖拽
+//    TMD e.preventDefault() 和 return false
+    dropElement.addEventListener('dragenter', function(){
+        dropElement.classList.add('ondrag')
+        return false
+    })
+    dropElement.addEventListener('dragover', function(event){
+        event = event || window.event
+        event.preventDefault()
+        dropElement.classList.add('ondrag')
+    })
+    dropElement.addEventListener('dragleave', function(){
+        dropElement.classList.remove('ondrag')
+    })
+    dropElement.addEventListener('drop', function(event){
+        event = event || window.event
+        event.preventDefault()
+        dropElement.classList.remove('ondrag')
+        var files = event.dataTransfer.files
+        for (var i = 0; i < files.length; i++) {
+            (function(i){
+                var img = document.createElement('img')
+                img.src = URL.createObjectURL(files[i])
+                img.onload = function(){
+                    document.querySelector('.show').appendChild(img)
+                    img.width = 200
+                    img.height = 200
+                    img.classList.add('img')
+                }
+            })(i)
+        }
+    })
+
+//    input读取文件
+    inputUpload.addEventListener('change', function(){
+        for (var i = 0; i < inputUpload.files.length; i++) {
+            (function(i){
+                var img = document.createElement('img')
+                img.src = URL.createObjectURL(inputUpload.files[i])
+                img.onload = function(){
+                    document.querySelector('.show').appendChild(img)
+                    img.width = 200
+                    img.height = 200
+                    img.classList.add('img')
+                }
+            })(i)
+        }
+    })
+</script>
+</body>
+</html>
