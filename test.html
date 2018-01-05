@@ -57,6 +57,12 @@
             float: left;
             margin: 5px;
         }
+        .showDownload{
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            border: 2px solid #afb;
+        }
     </style>
 </head>
 <body>
@@ -69,12 +75,34 @@
         <input type="file" multiple="multiple" accept="image/jpeg, image/png, image/jpg" id="uploadBtn">
         <label for="uploadBtn">拖拽文件到方框 或者 点击按钮选择文件</label>
     </div>
+    <button id="download">点击下载图片在下面展示</button>
+    <div class="showDownload"></div>
 </div>
 
 <script>
     var dropElement = document.querySelector('.drop')
     var inputUpload = document.querySelector('#uploadBtn')
 
+
+    document.querySelector('#download').onclick = function(){
+        var xhr = new XMLHttpRequest()
+        xhr.open('GET', 'http://localhost:12120/download')
+        xhr.responseType = 'blob'
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState === 4 && xhr.status === 200){
+//                console.log(xhr.response instanceof Blob, '===============')
+                var url = URL.createObjectURL(xhr.response)
+                var img = document.createElement('img')
+                img.src = url
+                document.querySelector('.showDownload').appendChild(img)
+                img.onload = function(){
+                    img.width = 200
+                    img.height = 200
+                }
+            }
+        }
+        xhr.send()
+    }
 
 //    拖拽
 //    TMD e.preventDefault() 和 return false
